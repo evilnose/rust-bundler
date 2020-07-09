@@ -21,7 +21,10 @@ pub fn bundle<P: AsRef<Path>>(package_path: P) -> String {
     let targets = &metadata.packages[0].targets;
     let bins: Vec<_> = targets.iter().filter(|t| target_is(t, "bin")).collect();
     assert!(bins.len() != 0, "no binary target found");
-    assert!(bins.len() == 1, "multiple binary targets not supported");
+    //assert!(bins.len() == 1, "multiple binary targets not supported");
+    if bins.len() != 1 {
+        eprintln!("multiple binary targets found; using the first one.");
+    }
     let bin = bins[0];
     let libs: Vec<_> = targets.iter().filter(|t| target_is(t, "lib")).collect();
     assert!(libs.len() <= 1, "multiple library targets not supported");
@@ -191,10 +194,10 @@ fn read_file(path: &Path) -> Option<String> {
 }
 
 fn prettify(code: String) -> String {
-    let config = Default::default();
-    let out: Option<&mut Sink> = None;
-    let result =
-        rustfmt::format_input(rustfmt::Input::Text(code), &config, out).expect("rustfmt failed");
-    let code = &result.1.first().expect("rustfmt returned no code").1;
+    //let config = Default::default();
+    //let out: Option<&mut Sink> = None;
+    //let result =
+        //rustfmt::format_input(rustfmt::Input::Text(code), &config, out).expect("rustfmt failed");
+    //let code = &result.1.first().expect("rustfmt returned no code").1;
     format!("{}", code)
 }
